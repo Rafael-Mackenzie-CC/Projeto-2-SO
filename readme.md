@@ -31,7 +31,6 @@ sem_post(&semaforo[0]);
 
 4 A conta destino pode tornar-se a conta origem, ou seja, a conta que inicialmente enviava dinheiro pode passar a recebê-lo, e vice-versa;
 Para isso, utilizamos os métodos transacoes1 e transacoes2, responsáveis pela lógica de transferência da conta 1 para a conta 2 e vice-versa. A ordem de execução das threads que empregam esses métodos é definida pelo algoritmo do escalonador, que intercala a ordem das threads conforme as duas lógicas, movendo-as da fila de prontos para a fila de execução.
-
 void *transacoes1(void *arg) {
   int id = *(int *)arg;
 
@@ -42,8 +41,10 @@ void *transacoes1(void *arg) {
   sem_wait(&semaforo[1]);
   c2.saldo += 2;
   sem_post(&semaforo[1]);
+  printf("Transferência %d concluída com sucesso!\n", id + 1);
+  printf("Saldo de c1: %d\n", c1.saldo);
+  printf("Saldo de c2: %d\n", c2.saldo);
 }
-
 void *transacoes2(void *arg) {
   int id = *(int *)arg;
 
@@ -54,6 +55,9 @@ void *transacoes2(void *arg) {
   sem_wait(&semaforo[0]);
   c1.saldo += 2;
   sem_post(&semaforo[0]);
+  printf("Transferência %d concluída com sucesso!\n", id + 1);
+  printf("Saldo de c1: %d\n", c1.saldo);
+  printf("Saldo de c2: %d\n", c2.saldo);
 }
 
 5 Serão permitidas até 100 transações simultâneas de transferência.
